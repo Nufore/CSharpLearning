@@ -5,27 +5,18 @@ public class Program
 
     public static bool IsCorrectString(string str)
     {
+        var pairs = new Dictionary<char, char>();
+        pairs.Add('(', ')');
+        pairs.Add('[', ']');
         var stack = new Stack<char>();
-        foreach (var symbol in str)
+        foreach (var e in str)
         {
-            char openBraket;
-            switch (symbol)
+            if (pairs.ContainsKey(e)) stack.Push(e);
+            else if (pairs.ContainsValue(e))
             {
-                case '(':
-                case '[':
-                    stack.Push(symbol);
-                    break;
-                case ')':
-                    if (stack.Count == 0) return false;
-                    openBraket = stack.Pop();
-                    if (openBraket != '(') return false;
-                    break;
-                case ']':
-                    if (stack.Count == 0) return false;
-                    openBraket = stack.Pop();
-                    if (openBraket != '[') return false;
-                    break;
+                if (stack.Count == 0 || pairs[stack.Pop()] != e) return false;
             }
+            else return false;
         }
         return stack.Count == 0;
     }
